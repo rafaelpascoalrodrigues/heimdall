@@ -1,8 +1,11 @@
 # Coded bt DTil 29/12/2016
 
 import threading
-import mysql.connector
 import time
+
+import mysql.connector
+from mysql.connector import errorcode
+
 
 class DBBroker():
 	def __init__(self, user, password, database, host):
@@ -11,11 +14,18 @@ class DBBroker():
 								'password':'password',
 								'host':host,
 								'database':database}
+
 	def connect2DB():
-		self.conn = mysql.connector.connect(self.connDescript)
+		try:
+			self.conn = mysql.connector.connect(self.connDescript)
+		except mysql.connector.Error as e:
+			print e
+
 	def close():
 		self.conn.close()
-	
+
+	def query():
+		# To do...
 
 class Broker(threading.Thread):
 	def __init__(self, threadId, threadName):
@@ -23,5 +33,7 @@ class Broker(threading.Thread):
 		self.threadId = threadId
 		self.threadName = threadName
 	def run(self):
-		execute()
+		#execute()
+
+		# To do...
 
