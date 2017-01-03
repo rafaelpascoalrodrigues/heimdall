@@ -19,21 +19,20 @@ class Exec(threading.Thread):
 		output = subprocess.check_output(self.command, stderr=subprocess.STOUT)
 		print output
 
-class DBbutils():
+class DBUtils():
 
 	def __init__(self, user, password, database, host):
 		self.conn = Null
-		self.connDescription = {'user':user,
+		self.connDescriptor = {'user':user,
 		                        'password':password,
 		                        'host':host,
 		                        'database':database}
 
 	def connect2DB():
 		try:
-			self.conn = mysql.connector.connect(self.connDescript)
+			self.conn = mysql.connector.connect(self.connDescriptor)
 		except mysql.connector.Error as e:
 			print e
-			return 0
 
 	def close():
 		self.conn.close()
