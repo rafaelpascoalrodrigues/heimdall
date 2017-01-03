@@ -1,7 +1,7 @@
-import lib.py
-import database.py
+from lib import *
+from database import *
 
-dbHelper = DBUtils('heimdall', 'heimdall', 'heimdall', '127.0.0.1')
+dbHelper = DBUtils('heimdall', 'heimdall', 'heimdall', 'localhost')
 dbHelper.connect2DB()
 
 # Create tables in db
