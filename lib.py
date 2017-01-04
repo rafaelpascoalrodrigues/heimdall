@@ -25,15 +25,15 @@ class Exec(threading.Thread):
 		dbHelper.connect2DB()
 
 		query = ("INSERT INTO data (" 
-			    " service_id,"
-			    " run_date," 
-			    " run_time,"
-			    " data)"
-			    " VALUES ("
-			    + str(self.serviceId) + ","
-			    " CURDATE(),"
-			    " CURTIME(),"
-			    "'" + output + "');")
+		    " service_id,"
+		    " run_date," 
+		    " run_time,"
+		    " data)"
+		    " VALUES ("
+		    + str(self.serviceId) + ","
+		    " CURDATE(),"
+		    " CURTIME(),"
+		    "'" + output + "');")
 
 		dbHelper.query(query)
 		dbHelper.close()

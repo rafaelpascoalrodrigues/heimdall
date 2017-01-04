@@ -5,6 +5,13 @@ DB['heimdall'] = 'heimdall'
 
 TABLES = {}
 
+TABLES['control_params'] = (
+	"CREATE TABLE IF NOT EXISTS control_params ("
+	"  param VARCHAR(50),"
+	"  value VARCHAR(50),"
+	"  PRIMARY KEY (param)"
+	") ENGINE=InnoDB")
+
 TABLES['services'] = (
 	"CREATE TABLE IF NOT EXISTS services ("
 	"  service_id int(11) NOT NULL AUTO_INCREMENT,"
