@@ -9,13 +9,21 @@ dbHelper.query(TABLES['services'])
 dbHelper.query(TABLES['data'])
 
 # Select from DB programs to run
-  # Todo
-# Create and execute plugins as threads
+services = dbHelper.query('SELECT service_name, service_args FROM services;')
 
-program = Exec(1, 'cpu_monitor.py')
-program.run()
+# Create and execute services as threads
+threadId = 0
 
-# Record to DB plugin output
+for (service_name, service_args) in services:
+	if not service_args:
+		t = Exec(threadId, service_name)
+	else:
+		t = Exec(threadId, service_name + ' ' + service_args)
+
+	t.run()
+	threadId += 1
+
+# Record output to DB
   # Todo
 
 dbHelper.close()

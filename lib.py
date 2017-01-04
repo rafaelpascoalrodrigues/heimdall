@@ -17,9 +17,8 @@ class Exec(threading.Thread):
 		self.threadId = threadId
 
 	def run(self):
-		print self.command
 		output = subprocess.check_output(self.command, stderr=subprocess.STDOUT)
-		print output
+		print str(self.threadId) + ' : ' + output
 
 class DBUtils():
 
@@ -33,9 +32,9 @@ class DBUtils():
 	def connect2DB(self):
 		try:
 			self.conn = mysql.connector.connect(user = self.user,
-				                                password = self.password,
-				                                database = self.database,
-				                                host = self.host)
+			                                    password = self.password,
+			                                    database = self.database,
+			                                    host = self.host)
 		except mysql.connector.Error as e:
 			print e
 
@@ -48,7 +47,7 @@ class DBUtils():
 			cursor.execute(queryText)
 		except mysql.connector.Error as e:
 			print e
-			return 0
+			return
 		# Check if query returned something
 		if not cursor.rowcount:
 			return
