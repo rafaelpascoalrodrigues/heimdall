@@ -11,7 +11,10 @@ dbHelper.query(TABLES['data'])
 # Select from DB programs to run
   # Todo
 # Create and execute plugins as threads
-  # Todo
+
+program = Exec(1, 'cpu_monitor.py')
+program.run()
+
 # Record to DB plugin output
   # Todo
 

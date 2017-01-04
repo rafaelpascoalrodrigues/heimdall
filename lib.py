@@ -7,16 +7,18 @@ import time
 
 class Exec(threading.Thread):
 
-	PATH = '/usr/lib/heimdall/plugins/'
-
 	def __init__(self, threadId, commandName):
+
+		#PATH = '/usr/lib/heimdall/plugins/'
+		self.PATH = 'monitors/'
+
 		threading.Thread.__init__(self)
-		self.command = PATH + commandName
+		self.command = self.PATH + commandName
 		self.threadId = threadId
 
 	def run(self):
 		print self.command
-		output = subprocess.check_output(self.command, stderr=subprocess.STOUT)
+		output = subprocess.check_output(self.command, stderr=subprocess.STDOUT)
 		print output
 
 class DBUtils():
