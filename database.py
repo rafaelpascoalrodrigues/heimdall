@@ -20,6 +20,5 @@ TABLES['data'] = (
 	"  service_id int(11),"
 	"  run_date date,"
 	"  run_time time,"
-	"  service_name VARCHAR(50),"
-	"  service_args VARCHAR(50)"
+	"  data VARCHAR(256)"
 	") ENGINE=InnoDB")
