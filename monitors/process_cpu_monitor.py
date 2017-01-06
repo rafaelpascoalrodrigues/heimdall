@@ -32,10 +32,18 @@ for i in range(2):
     index = 0
 
     for pid in pidsIter:
- 	f = open('/proc/' + pid[0] + '/stat')
+
+        file = '/proc/' + pid[0] + '/stat'
+
+        # remove processes which hava terminated from list
+
+        if not os.path.exists(file):
+            pids[index] = []
+            continue
+
+     	f = open(file)
     	s = f.read().split(' ')
         f.close()
-
 
         # If first iteration add proc name to list
 
@@ -50,11 +58,14 @@ for i in range(2):
     	14 -> stime : kernel mode ticks
     
     	"""
+
         cpuTime = int(s[13]) + int(s[14])
         pids[index].append(cpuTime)
         index += 1
 
     time.sleep(1)
+
+pids = [i for i in pids if i != []]
 
 for i in range(0,len(pids)):
     processCpuTime = 100 * (float(pids[i][3] - pids[i][2]) / float(totalCpu[1] - totalCpu[0]))
