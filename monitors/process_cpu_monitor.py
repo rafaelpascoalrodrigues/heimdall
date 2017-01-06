@@ -39,6 +39,7 @@ for i in range(2):
 
         if not os.path.exists(file):
             pids[index] = []
+            index += 1
             continue
 
      	f = open(file)
