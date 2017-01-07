@@ -1,5 +1,6 @@
 import os
 import time
+import json
 
 def totalCpuTime():
 
@@ -46,10 +47,11 @@ for i in range(2):
     	s = f.read().split(' ')
         f.close()
 
-        # If first iteration add proc name to list
+        # If first iteration add proc name and parent pid to list 
 
         if i == 0:
             pids[index].append(s[1])
+            pids[index].append(s[3])
 
     
     	"""
@@ -67,8 +69,12 @@ for i in range(2):
     time.sleep(1)
 
 pids = [i for i in pids if i != []]
+output = []
 
 for i in range(0,len(pids)):
-    processCpuTime = 100 * (float(pids[i][3] - pids[i][2]) / float(totalCpu[1] - totalCpu[0]))
+    processCpuTime = 100 * (float(pids[i][4] - pids[i][3]) / float(totalCpu[1] - totalCpu[0]))
 
-    print  pids[i][0] + ' : ' + pids[i][1] + ' : ' +str(processCpuTime)
+    # print pids[i][0] + ' : ' + pids[i][1] + ' : ' +str(processCpuTime)
+    output.append([pids[i][0], pids[i][1], pids[i][2], processCpuTime])
+
+print json.dumps(output)
