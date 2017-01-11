@@ -2,7 +2,8 @@
 ''' Heindall Process Memory Monitor
     Collect memory used by proccesses and return as a json single string as
     below:
-    [[pid, 'pname', memory_Kb],[pid, 'pname', memory_Kb],...]
+    [[pid, ppid, 'pname', memory_Kb],
+    [pid, ppid, 'pname', memory_Kb],...]
 '''
 from os import listdir
 import json
@@ -33,6 +34,7 @@ def get_memory_by_process():
                 file_handler.close()
                 continue
 
+            ppid = file_buffer[0].split(')')[1].split(' ')[2]
             pname = file_buffer[0].split('(')[1].split(')')[0]
 
             file_handler.close()
@@ -58,7 +60,7 @@ def get_memory_by_process():
         except IOError:
             file_handler.close()
 
-        process_list += [[int(pid), pname, int(size)]]
+        process_list += [[int(pid), int(ppid), pname, int(size)]]
 
     # Return processes list with memory information
     return process_list

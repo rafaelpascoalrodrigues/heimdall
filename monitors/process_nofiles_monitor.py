@@ -2,7 +2,8 @@
 ''' Heindall Process Opened Files Monitor
     Collects information of number of opened files by proccesses and return as
     a json single string as below:
-    [[pid, 'pname', no_files_opened],[pid, 'pname', no_files_opened],...]
+    [[pid, ppid, 'pname', no_files_opened],
+    [pid, ppid, 'pname', no_files_opened],...]
 '''
 from os import listdir
 import json
@@ -33,6 +34,7 @@ def get_nofiles_by_process():
                 file_handler.close()
                 continue
 
+            ppid = file_buffer[0].split(')')[1].split(' ')[2]
             pname = file_buffer[0].split('(')[1].split(')')[0]
 
             file_handler.close()
@@ -47,7 +49,7 @@ def get_nofiles_by_process():
         files_opened = len(files_list)
 
 
-        process_list += [[int(pid), pname, int(files_opened)]]
+        process_list += [[int(pid), int(ppid), pname, int(files_opened)]]
 
     # Return processes list with number of opened files information
     return process_list
