@@ -3,6 +3,8 @@ from database import *
 
 from math import ceil
 
+import time
+
 dbHelper = DBUtils('heimdall', 'heimdall', 'heimdall', 'localhost')
 dbHelper.connect2DB()
 
@@ -26,24 +28,25 @@ timesToRun = ceil(services_num[0][0] / maxConcurrentServices[0][0])
 
 """
 
-# Select from DB programs to run
-services = dbHelper.query('SELECT service_id, service_name, service_args FROM services;')
+while True:
+	# Select from DB programs to run
+	services = dbHelper.query('SELECT service_id, service_name, service_args FROM services;')
+	dbHelper.close()
 
-# Create and execute services as threads
-threadId = 0
+	# Create and execute services as threads
+	threadId = 0
 
-for (service_id, service_name, service_args) in services:
-	if not service_args:
-		command = service_name
-	else:
-		command = service_name + ' ' + service_args
+	for (service_id, service_name, service_args) in services:
+		if not service_args:
+			command = service_name
+		else:
+			command = service_name + ' ' + service_args
 
-	t = Exec(threadId, service_id, command)
-	t.start()
+		t = Exec(threadId, service_id, command)
+		t.start()
 
-	threadId += 1
-
-dbHelper.close()
-
-
+		threadId += 1
+		
+		# 6 measures per minute
+		time.sleep(10)
 

@@ -1,5 +1,4 @@
 import mysql.connector
-from mysql.connector import errorcode
 
 import subprocess
 import threading
@@ -60,7 +59,6 @@ class DBUtils():
 		self.conn.close()
 
 	def query(self, queryText):
-
 		cursor = self.conn.cursor()
 
 		try:
