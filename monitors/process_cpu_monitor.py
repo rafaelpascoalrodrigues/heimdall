@@ -1,3 +1,10 @@
+#!/usr/bin/python
+''' Heindall Process cpu Monitor
+    Collect cpu used by proccesses and return as a json single string as
+    below:
+    [[pid, 'pname', parent_pid, cpu_percentage],...]
+'''
+
 import os
 import time
 import json
@@ -17,9 +24,6 @@ def totalCpuTime():
             totalCpuTicks = int(value) + totalCpuTicks
     
     return totalCpuTicks
-
-
-## Ini ##
 
 totalCpu = []
 
@@ -54,13 +58,10 @@ for i in range(2):
             pids[index].append(s[3])
 
     
-    	"""
-    	all values are decremented by 1 due to python index
-    
-        13 -> utime : user mode ticks
-    	14 -> stime : kernel mode ticks
-    
-    	"""
+    	''' all values are decremented by 1 due to python index
+            13 -> utime : user mode ticks
+            14 -> stime : kernel mode ticks
+        '''
 
         cpuTime = int(s[13]) + int(s[14])
         pids[index].append(cpuTime)
@@ -73,8 +74,6 @@ output = []
 
 for i in range(0,len(pids)):
     processCpuTime = 100 * (float(pids[i][4] - pids[i][3]) / float(totalCpu[1] - totalCpu[0]))
-
-    # print pids[i][0] + ' : ' + pids[i][1] + ' : ' +str(processCpuTime)
     output.append([pids[i][0], pids[i][1], pids[i][2], processCpuTime])
 
 print json.dumps(output)

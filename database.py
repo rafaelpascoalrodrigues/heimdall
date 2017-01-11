@@ -27,5 +27,5 @@ TABLES['data'] = (
 	"  service_id int(11),"
 	"  run_date date,"
 	"  run_time time,"
-	"  data VARCHAR(256)"
+	"  data TEXT"
 	") ENGINE=InnoDB")
