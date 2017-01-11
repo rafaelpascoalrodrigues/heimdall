@@ -71,3 +71,4 @@ class DBUtils():
 			self.conn.commit()
 			return
 		return cursor.fetchall()
+		
