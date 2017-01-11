@@ -72,6 +72,6 @@ for i in range(0,len(pids)):
     io_read = pids[i][5] - pids[i][3]
     io_write = pids[i][6] - pids[i][4]
 
-    output.append([pids[i][0], pids[i][1], pids[i][2] io_read, io_write])
+    output.append([pids[i][0], pids[i][1], pids[i][2], io_read, io_write])
 
 print json.dumps(output)

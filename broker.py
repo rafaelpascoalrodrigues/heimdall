@@ -1,34 +1,26 @@
 from lib import *
-from database import *
 
-from math import ceil
-
+import os
 import time
 
+''' Must figure out how to effectively run 'max_concurrent_services' per time
+    
+    Initialize control_params with max_concurrent_services
+    dbHelper.query("INSERT INTO control_params (param, value) VALUES ('max_concurrent_services', '50');")
+    
+    Check how many services are there to run
+    maxConcurrentServices = dbHelper.query("SELECT value FROM control_params WHERE param LIKE 'max_concurrent_services';")
+    services_num = dbHelper.query('SELECT COUNT(*) FROM services')
+    
+    timesToRun = ceil(services_num[0][0] / maxConcurrentServices[0][0])
+'''
+
 dbHelper = DBUtils('heimdall', 'heimdall', 'heimdall', 'localhost')
-dbHelper.connect2DB()
-
-# Create tables in db
-dbHelper.query(TABLES['control_params'])
-dbHelper.query(TABLES['services'])
-dbHelper.query(TABLES['data'])
-
-"""
-
-# Must figure out how to effectively run 'max_concurrent_services' per time
-
-# Initialize control_params with max_concurrent_services
-dbHelper.query("INSERT INTO control_params (param, value) VALUES ('max_concurrent_services', '50');")
-
-# Check how many services are there to run
-maxConcurrentServices = dbHelper.query("SELECT value FROM control_params WHERE param LIKE 'max_concurrent_services';")
-services_num = dbHelper.query('SELECT COUNT(*) FROM services')
-
-timesToRun = ceil(services_num[0][0] / maxConcurrentServices[0][0])
-
-"""
 
 while True:
+
+	dbHelper.connect2DB()
+
 	# Select from DB programs to run
 	services = dbHelper.query('SELECT service_id, service_name, service_args FROM services;')
 	dbHelper.close()
@@ -47,7 +39,5 @@ while True:
 
 		threadId += 1
 		
-		# 6 measures per minute
-		time.sleep(10)
-
-
+	# 6 measures per minute
+	time.sleep(10)
