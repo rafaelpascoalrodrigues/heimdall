@@ -14,7 +14,7 @@ cd /usr/lib/heimdall
 useradd heimdall
 
 chown -R heimdall.heimdall *
-chmod 144 monitors/*
+chmod 744 monitors/*
 
 # Configure Database
 mysql -e "CREATE DATABASE heimdall;"

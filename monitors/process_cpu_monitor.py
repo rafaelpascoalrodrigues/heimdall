@@ -10,7 +10,7 @@ import time
 import json
 
 def getTotalCpuTime():
-    # Measure total cpu ticks
+    # measure total cpu ticks
 
     try:
         handler = open('/proc/stat')
@@ -26,7 +26,7 @@ def getTotalCpuTime():
         if not value.isdigit():
             continue
 
-        # Sum cpu ticks in all states
+        # sum cpu ticks in all states
         totalCpuTicks += int(value)
 
     return float(totalCpuTicks)
@@ -51,7 +51,7 @@ def getProcessCpuTime():
             handler.close()
             continue            
 
-        # Get process cpu time in user and kernel mode 
+        # get process cpu time in user and kernel mode 
         processCpuTime = float(buff[13]) + float(buff[14])
         processName = buff[1].split('(')[1].split(')')[0]
         parentPid = int(buff[3])
@@ -60,27 +60,26 @@ def getProcessCpuTime():
 
     return processDict
 
-
 def measure():
 
-    # Measure cpu time
+    # measure cpu time
     totalIni = getTotalCpuTime()
     processIni = getProcessCpuTime()
 
-    # Wait 1 sec
+    # wait 1 sec
     time.sleep(1)
 
-    # Measure again
+    # measure again
     totalFinal = getTotalCpuTime()
     processFinal = getProcessCpuTime()
 
-    # Calc total cpu ticks in 1 sec
+    # calc total cpu ticks in 1 sec
     totalCpu = totalFinal - totalIni
 
     processList = list()
 
     for pid in processFinal:
-        # Check if process has terminated between measures
+        # check if process has terminated between measures
         if pid in processIni:
             processCpuTime = 100 * (processFinal[pid]['cpu_time'] - processIni[pid]['cpu_time']) / totalCpu
             processList += [[pid, processFinal[pid]['p_name'], processFinal[pid]['parent_id'], processCpuTime]]
