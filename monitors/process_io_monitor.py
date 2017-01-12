@@ -1,65 +1,77 @@
 #!/usr/bin/python
+''' Heindall Process IO Monitor
+    Collect IO used by proccesses and return as a json single string as
+    below:
+    [[pid, 'pname', parent_id, read_bytes, write_bytes],...]
+'''
 
 import os
-import re
 import time
 import json
 
-# Regex
-read = re.compile('read_bytes')
-write = re.compile('write_bytes')
+def getProcessIO():
 
-pids = [[pid] for pid in os.listdir('/proc') if pid.isdigit()]
-pidsIter = pids[:]
+	# return variable
+	processDict = dict()
 
-for i in range(2): # Measure , wait 1 sec, measure agai
-
-	index = 0
-
-	for pid in pidsIter:
-
-		file = '/proc/' + pid[0] + '/stat'
-
-		if not os.path.exists(file):
-			pids[index] = []
-			index += 1
+	for pid in os.listdir('/proc'):
+		if not pid.isdigit():
 			continue
 
-		f = open(file)
-		s = f.read().split(' ')
-		f.close()
+		# Get process info
+		file = '/proc/' + pid + '/stat'
 
-		if i == 0:
-			pids[index].append(s[1])
+		try:			
+			handler = open(file, 'r')
+			buff = handler.read().split(' ')
+			handler.close()
+		except IOError:
+			handler.close()
+			continue
 
-		file = '/proc/' + pid[0] + '/io'
+		processName = buff[1].split('(')[1].split(')')[0]
+		parentPid = int(buff[3])
 
-		f = open(file)
-		s = f.read().split('\n')
-		f.close()		
+		# Get IO stats
+		file = '/proc/' + pid + '/io'
 
-		for line in s:
-			if read.match(line):
-				aux = line.split(' ')
-				pids[index].append(int(aux[1]))
-			if write.match(line):
-				aux = line.split(' ')
-				pids[index].append(int(aux[1]))
+		try:			
+			handler = open(file, 'r')
+			buff = handler.read().split('\n')
+			handler.close()
+		except IOError:
+			handler.close()
+			continue
 
-		index += 1
+		# Get process read_bytes and write_bytes	
+		readBytes = int(buff[4].split(' ')[1])
+		writeBytes = int(buff[5].split(' ')[1])
 
+		processDict[pid] = {'read' : readBytes, 'write' : writeBytes, 'p_name' : processName, 'parent_id': parentPid}
+
+	return processDict
+
+def measure():
+
+	# measure IO 
+	ioIni = getProcessIO()
+
+	# wait 1 sec
 	time.sleep(1)
 
-pids = [i for i in pids if i != []]
-output = []
+	# measure again
+	ioFinal = getProcessIO()
 
-for i in range(0,len(pids)):
-    io_read = pids[i][4] - pids[i][2]
-    io_write = pids[i][5] - pids[i][3]
+	processList = list()
 
-    # print pids[i][0] + ' : ' + pids[i][1] + ' : ' +str(processCpuTime)
-    output.append([pids[i][0], pids[i][1], io_read, io_write])
+	for pid in ioFinal:
+		# check if process has terminated between measures
+		if pid in ioIni:
+			ioRead = ioFinal[pid]['read'] - ioIni[pid]['read']
+			ioWrite = ioFinal[pid]['write'] - ioIni[pid]['write']
 
-print json.dumps(output)
+			processList += [[pid, ioFinal[pid]['p_name'], ioFinal[pid]['parent_id'], ioRead, ioWrite]]
 
+	return processList
 
+print json.dumps(measure())

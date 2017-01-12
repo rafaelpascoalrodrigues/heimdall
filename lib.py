@@ -1,5 +1,4 @@
 import mysql.connector
-from mysql.connector import errorcode
 
 import subprocess
 import threading
@@ -9,8 +8,7 @@ class Exec(threading.Thread):
 
 	def __init__(self, threadId, serviceId, commandName):
 
-		#PATH = '/usr/lib/heimdall/plugins/'
-		self.PATH = 'monitors/'
+		self.PATH = '/usr/lib/heimdall/monitors/'
 
 		threading.Thread.__init__(self)
 		self.command = self.PATH + commandName
@@ -60,7 +58,6 @@ class DBUtils():
 		self.conn.close()
 
 	def query(self, queryText):
-
 		cursor = self.conn.cursor()
 
 		try:
@@ -73,3 +70,4 @@ class DBUtils():
 			self.conn.commit()
 			return
 		return cursor.fetchall()
+		

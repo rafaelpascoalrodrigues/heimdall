@@ -19,7 +19,7 @@ TABLES['services'] = (
 	"  creation_time time,"
 	"  service_name VARCHAR(50),"
 	"  service_args VARCHAR(50),"
-	"  PRIMARY KEY (service_id)"
+	"  PRIMARY KEY (service_id, service_name)"
 	") ENGINE=InnoDB")
 
 TABLES['data'] = (
@@ -27,5 +27,5 @@ TABLES['data'] = (
 	"  service_id int(11),"
 	"  run_date date,"
 	"  run_time time,"
-	"  data VARCHAR(256)"
+	"  data TEXT"
 	") ENGINE=InnoDB")
