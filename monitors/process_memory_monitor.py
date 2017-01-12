@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-''' Heindall Process Memory Monitor
+#!/usr/bin/python
+''' Heimdall Process Memory Monitor
     Collect memory used by proccesses and return as a json single string as
     below:
     [[pid, ppid, 'pname', memory_Kb],

@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-''' Heindall Process Opened Files Monitor
+#!/usr/bin/python
+''' Heimdall Process Opened Files Monitor
     Collects information of number of opened files by proccesses and return as
     a json single string as below:
     [[pid, ppid, 'pname', no_files_opened],
