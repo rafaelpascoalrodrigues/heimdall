@@ -1,0 +1,92 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          heimdall
+# Required-Start:    $network $local_fs $remote_fs
+# Required-Stop:     $network $local_fs $remote_fs
+# Should-Start:      mysql $time
+# Should-Stop:       mysql $time
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Heimdall
+### END INIT INFO
+
+DAEMON=$(/bin/readlink -f ${0})
+NAME=$(/usr/bin/basename ${DAEMON})
+PATH=$(/usr/bin/dirname ${DAEMON})
+PIDFILE=/var/run/${NAME}.pid
+
+TRUE=/bin/true
+
+if ! [ -x $DAEMON ] ; then
+    echo "ERROR: ${NAME} not found in '${DAEMON}'"
+    exit 1
+fi
+
+case "$1" in
+    start)
+        printf "Starting ${NAME}... "
+
+        test -e ${PIDFILE} && kill -0 $(/bin/cat ${PIDFILE}) > /dev/null 2>&1
+        if [ $? -eq 0 ]; then
+            echo "already running."
+            exit 1
+        fi
+
+        /sbin/start-stop-daemon --start --quiet --make-pidfile --pidfile ${PIDFILE} --background --startas /usr/bin/python $PATH/broker.py
+        echo "done."
+        ;;
+
+
+    stop)
+        printf "Stopping ${NAME}... "
+        test -e ${PIDFILE} && kill -0 $(/bin/cat ${PIDFILE}) > /dev/null 2>&1
+        if [ $? -eq 0 ]; then
+            kill -15 $(/bin/cat ${PIDFILE})
+            WAIT_FOR_KILL=10
+            while kill -0 $(/bin/cat ${PIDFILE}) 2> /dev/null; do
+                test ${WAIT_FOR_KILL} -le 0
+                if [ $? -eq 0 ]; then
+                    break
+                fi
+                WAIT_FOR_KILL=$((${WAIT_FOR_KILL} - 1))
+                /bin/sleep 1
+            done
+            test ${WAIT_FOR_KILL} -eq 0
+            if [ $? -eq 0 ]; then
+                echo "failure!"
+                exit 1
+            fi
+
+            echo "done."
+            exit 0
+        else
+            echo "not running."
+            exit 0
+        fi
+        ;;
+
+
+    restart)
+        /bin/sh $0 stop
+        /bin/sleep 2  # Take some time to really be stopped.
+        /bin/sh $0 start
+        ;;
+
+
+    status)
+        test -e ${PIDFILE} && kill -0 $(/bin/cat ${PIDFILE}) > /dev/null 2>&1
+        if [ $? -eq 0 ]; then
+            echo "${NAME} is running."
+            exit 0
+        else
+            echo "${NAME} is not running."
+            exit 0
+        fi
+        ;;
+
+
+    *)
+    echo "Usage: /etc/init.d/${NAME} {start|stop|restart|status}" >&2
+    exit 1
+    ;;
+esac

@@ -22,5 +22,9 @@ mysql -e "CREATE USER 'heimdall'@'localhost' IDENTIFIED BY 'heimdall';"
 mysql -e "GRANT ALL PRIVILEGES ON heimdall.* TO 'heimdall'@'localhost' IDENTIFIED BY 'heimdall';"
 mysql -e "FLUSH PRIVILEGES;"
 
+# Config daemon on systemd
+ln -sf /usr/lib/heimdall/heimdall /etc/heimdall
+update-rc.d heimdall defaults
+
 chmod 744 configure.py
 ./configure.py
